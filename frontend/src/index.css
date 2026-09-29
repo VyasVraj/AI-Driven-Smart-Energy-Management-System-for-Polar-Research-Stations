@@ -1,0 +1,344 @@
+/* ─── PolarGrid AI — Design System ────────────────────────────────────── */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Space+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ─── Design Tokens ───────────────────────────────────────────────────── */
+:root {
+  /* Backgrounds */
+  --bg:        #0A0F1A;
+  --bg-panel:  #101827;
+  --bg-raised: #141E2E;
+  --bg-hover:  #1A2540;
+
+  /* Borders */
+  --border:    #1E293B;
+  --border-dim: #162032;
+
+  /* Text */
+  --text:      #E2E8F0;
+  --text-muted:#94A3B8;
+  --text-dim:  #475569;
+  --text-faint:#334155;
+
+  /* Accents — flat, no gradients */
+  --cyan:      #06B6D4;
+  --green:     #10B981;
+  --amber:     #F59E0B;
+  --red:       #EF4444;
+  --purple:    #8B5CF6;
+
+  /* Accent bg tints */
+  --cyan-tint:   rgba(6,182,212,0.08);
+  --green-tint:  rgba(16,185,129,0.08);
+  --amber-tint:  rgba(245,158,11,0.08);
+  --red-tint:    rgba(239,68,68,0.08);
+  --purple-tint: rgba(139,92,246,0.08);
+}
+
+/* ─── Reset ───────────────────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+
+/* ─── Base Typography ─────────────────────────────────────────────────── */
+body {
+  font-family: 'Inter', -apple-system, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4, h5 {
+  font-family: 'Space Grotesk', sans-serif;
+  letter-spacing: -0.3px;
+  color: var(--text);
+}
+
+/* ─── Moving Dot Background (body layer, very subtle) ─────────────────── */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: radial-gradient(rgba(6,182,212,0.4) 1px, transparent 1px);
+  background-size: 48px 48px;
+  opacity: 0.035;
+  animation: dotDrift 80s linear infinite;
+  pointer-events: none;
+  z-index: 0;
+}
+
+@keyframes dotDrift {
+  from { background-position: 0 0; }
+  to   { background-position: 0 2400px; }
+}
+
+/* ─── Scrollbar ───────────────────────────────────────────────────────── */
+::-webkit-scrollbar             { width: 4px; height: 4px; }
+::-webkit-scrollbar-track       { background: transparent; }
+::-webkit-scrollbar-thumb       { background: var(--bg-hover); border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: var(--text-faint); }
+
+/* ─── Card / Panel ────────────────────────────────────────────────────── */
+.pg-card {
+  background: var(--bg-panel);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  position: relative;
+  overflow: hidden;
+  transition: border-color 0.2s ease;
+}
+.pg-card:hover {
+  border-color: #273548;
+}
+
+/* Accent stripe variants */
+.pg-card-cyan   { border-top: 2px solid var(--cyan); }
+.pg-card-green  { border-top: 2px solid var(--green); }
+.pg-card-amber  { border-top: 2px solid var(--amber); }
+.pg-card-red    { border-top: 2px solid var(--red); }
+.pg-card-purple { border-top: 2px solid var(--purple); }
+
+/* ─── Sidebar ─────────────────────────────────────────────────────────── */
+.pg-sidebar {
+  background: #080D18;
+  border-right: 1px solid var(--border-dim);
+}
+
+/* ─── Topbar ──────────────────────────────────────────────────────────── */
+.pg-topbar {
+  background: #080D18;
+  border-bottom: 1px solid var(--border-dim);
+}
+
+/* ─── Status Pills ────────────────────────────────────────────────────── */
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 10px;
+  border-radius: 3px;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+.pill-cyan   { background: var(--cyan-tint);   border: 1px solid rgba(6,182,212,0.2);   color: var(--cyan); }
+.pill-green  { background: var(--green-tint);  border: 1px solid rgba(16,185,129,0.2);  color: var(--green); }
+.pill-amber  { background: var(--amber-tint);  border: 1px solid rgba(245,158,11,0.2);  color: var(--amber); }
+.pill-red    { background: var(--red-tint);    border: 1px solid rgba(239,68,68,0.2);   color: var(--red); }
+.pill-dim    { background: rgba(71,85,105,0.1); border: 1px solid rgba(71,85,105,0.2);  color: var(--text-dim); }
+
+/* ─── Section Label ───────────────────────────────────────────────────── */
+.section-label {
+  display: inline-block;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--cyan);
+  margin-bottom: 8px;
+}
+
+/* ─── Divider ─────────────────────────────────────────────────────────── */
+.pg-divider {
+  height: 1px;
+  background: var(--border);
+  margin: 0;
+}
+
+/* ─── Buttons ─────────────────────────────────────────────────────────── */
+.btn-cyan {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  background: var(--cyan);
+  color: var(--bg);
+  border: none;
+  padding: 10px 22px;
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 700;
+  font-size: 0.85rem;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: opacity 0.2s, box-shadow 0.2s;
+  text-decoration: none;
+  letter-spacing: 0.02em;
+}
+.btn-cyan:hover {
+  opacity: 0.88;
+  box-shadow: 0 0 20px rgba(6,182,212,0.25);
+}
+
+.btn-outline {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  background: transparent;
+  color: var(--cyan);
+  border: 1px solid rgba(6,182,212,0.35);
+  padding: 9px 20px;
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 700;
+  font-size: 0.85rem;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-decoration: none;
+}
+.btn-outline:hover {
+  background: var(--cyan-tint);
+  border-color: var(--cyan);
+}
+
+.btn-ghost {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: transparent;
+  color: var(--text-muted);
+  border: 1px solid var(--border);
+  padding: 7px 14px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.btn-ghost:hover {
+  background: var(--bg-raised);
+  color: var(--text);
+  border-color: #273548;
+}
+
+/* ─── Input ───────────────────────────────────────────────────────────── */
+.pg-input {
+  width: 100%;
+  background: var(--bg-raised);
+  border: 1px solid var(--border);
+  color: var(--text);
+  border-radius: 5px;
+  padding: 9px 14px;
+  font-size: 0.88rem;
+  font-family: 'Inter', sans-serif;
+  outline: none;
+  transition: border-color 0.2s;
+}
+.pg-input:focus {
+  border-color: var(--cyan);
+  box-shadow: 0 0 0 2px rgba(6,182,212,0.12);
+}
+.pg-input::placeholder { color: var(--text-dim); }
+
+/* ─── Select ──────────────────────────────────────────────────────────── */
+.pg-select {
+  appearance: none;
+  background: var(--bg-raised);
+  border: 1px solid var(--border);
+  color: var(--text);
+  border-radius: 5px;
+  padding: 7px 32px 7px 12px;
+  font-size: 0.83rem;
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 500;
+  cursor: pointer;
+  outline: none;
+  transition: border-color 0.2s;
+}
+.pg-select:focus { border-color: var(--cyan); }
+.pg-select option { background: var(--bg-panel); }
+
+/* ─── Recharts ────────────────────────────────────────────────────────── */
+.recharts-cartesian-grid-horizontal line,
+.recharts-cartesian-grid-vertical line {
+  stroke: var(--border-dim);
+}
+.recharts-text { fill: var(--text-dim); font-size: 11px; }
+.recharts-tooltip-wrapper .recharts-default-tooltip {
+  background: var(--bg-raised) !important;
+  border: 1px solid var(--border) !important;
+  border-radius: 6px !important;
+  color: var(--text) !important;
+  font-size: 0.82rem !important;
+}
+.recharts-legend-item-text { color: var(--text-muted) !important; font-size: 0.78rem; }
+
+/* ─── Energy Flow animation ───────────────────────────────────────────── */
+@keyframes flowDash {
+  from { stroke-dashoffset: 24; }
+  to   { stroke-dashoffset: 0; }
+}
+.flow-line {
+  stroke-dasharray: 6 4;
+  animation: flowDash 1.6s linear infinite;
+}
+
+/* ─── Fade-up entrance (scroll) ───────────────────────────────────────── */
+.fade-up {
+  opacity: 0;
+  transform: translateY(18px);
+  transition: opacity 0.55s ease-out, transform 0.55s ease-out;
+}
+.fade-up.visible { opacity: 1; transform: translateY(0); }
+
+/* ─── Sim badge ───────────────────────────────────────────────────────── */
+.sim-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: var(--amber-tint);
+  border: 1px solid rgba(245,158,11,0.2);
+  color: var(--amber);
+  font-size: 0.63rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 3px 9px;
+  border-radius: 3px;
+}
+
+/* ─── Pulse dot ───────────────────────────────────────────────────────── */
+.pulse-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  display: inline-block;
+  animation: pulseDot 2s ease-in-out infinite;
+}
+@keyframes pulseDot {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.35; }
+}
+
+/* ─── Landing page nav active link ───────────────────────────────────── */
+.nav-link {
+  color: var(--text-muted);
+  text-decoration: none;
+  font-size: 0.88rem;
+  transition: color 0.2s;
+}
+.nav-link:hover { color: var(--cyan); }
+
+/* ─── Table ───────────────────────────────────────────────────────────── */
+.pg-table { width: 100%; border-collapse: collapse; }
+.pg-table th {
+  padding: 10px 14px;
+  text-align: left;
+  font-size: 0.67rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  border-bottom: 1px solid var(--border);
+}
+.pg-table td {
+  padding: 11px 14px;
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  border-bottom: 1px solid var(--border-dim);
+}
+.pg-table tr:last-child td { border-bottom: none; }
+.pg-table tr:hover td { background: var(--bg-raised); color: var(--text); }
