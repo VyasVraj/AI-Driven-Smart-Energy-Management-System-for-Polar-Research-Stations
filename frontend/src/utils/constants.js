@@ -28,7 +28,10 @@ export const NAV_ITEMS = [
   { path: '/anomalies', label: 'Anomalies', icon: 'AlertTriangle', group: 'Intelligence' },
   { path: '/simulator', label: 'What-If Simulator', icon: 'FlaskConical', group: 'Intelligence' },
   { path: '/digital-twin', label: 'Digital Twin', icon: 'Cpu', group: 'Intelligence' },
-  { path: '/advisor', label: 'AI Advisor', icon: 'BrainCircuit', group: 'AI' },
+  { path: '/advisor', label: 'AI Advisor (RAG)', icon: 'BrainCircuit', group: 'AI' },
+  // SIH Upgrades
+  { path: '/mpc-optimizer', label: 'MPC Optimizer', icon: 'Cpu', group: 'AI' },
+  { path: '/load-shedding', label: 'Load Shedding', icon: 'ShieldAlert', group: 'AI' },
   { path: '/reports', label: 'Reports', icon: 'FileText', group: 'Analytics' },
   { path: '/analytics', label: 'Analytics', icon: 'BarChart3', group: 'Analytics' },
   { path: '/alerts', label: 'Alerts', icon: 'Bell', group: 'Monitoring' },

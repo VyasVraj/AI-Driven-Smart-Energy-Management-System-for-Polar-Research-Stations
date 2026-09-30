@@ -32,6 +32,10 @@ const Analytics = lazy(() => import('./pages/Analytics'))
 const Alerts = lazy(() => import('./pages/Alerts'))
 const Settings = lazy(() => import('./pages/Settings'))
 const AdminPanel = lazy(() => import('./pages/AdminPanel'))
+// SIH Upgrades
+const MPCOptimizer = lazy(() => import('./pages/MPCOptimizer'))
+const LoadShedding = lazy(() => import('./pages/LoadShedding'))
+
 
 function ProtectedRoute({ children }) {
   const { token } = useAuthStore()
@@ -67,7 +71,11 @@ export default function App() {
           <Route path="/alerts" element={<Alerts />} />
           <Route path="/settings" element={<Settings />} />
           <Route path="/admin" element={<AdminPanel />} />
+          {/* SIH Upgrades */}
+          <Route path="/mpc-optimizer" element={<MPCOptimizer />} />
+          <Route path="/load-shedding" element={<LoadShedding />} />
         </Route>
+
       </Routes>
     </Suspense>
   )

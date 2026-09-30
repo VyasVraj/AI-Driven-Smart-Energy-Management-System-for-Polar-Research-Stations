@@ -1,9 +1,18 @@
 import pandas as pd
 import numpy as np
-import xgboost as xgb
-from sklearn.metrics import mean_absolute_error, r2_score
 import joblib
 import os
+
+# Optional ML dependencies — server starts even if DLLs are blocked by Windows App Control
+try:
+    import xgboost as xgb
+    from sklearn.metrics import mean_absolute_error, r2_score
+    _ML_AVAILABLE = True
+except (ImportError, Exception):
+    _ML_AVAILABLE = False
+    print("[WARN] xgboost/sklearn not available — LoadForecaster will use synthetic fallback")
+
+
 
 class LoadForecaster:
     def __init__(self, model_path="ml_models/load_model.pkl"):

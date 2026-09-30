@@ -1,9 +1,16 @@
-import xgboost as xgb
-from sklearn.ensemble import RandomForestRegressor
 import pandas as pd
 import numpy as np
 import joblib
 import os
+
+try:
+    import xgboost as xgb
+    from sklearn.ensemble import RandomForestRegressor
+    _ML_AVAILABLE = True
+except (ImportError, Exception):
+    _ML_AVAILABLE = False
+    print("[WARN] xgboost/sklearn not available — RenewableForecaster will use synthetic fallback")
+
 
 class RenewableForecaster:
     def __init__(self, model_dir="ml_models/"):

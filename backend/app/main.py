@@ -5,6 +5,13 @@ import asyncio
 from app.config import settings
 from app.database import engine, Base, SessionLocal
 from app.api import auth, stations, energy, renewable, battery, fuel, optimization, risk, anomalies, alerts, simulation, weather, reports, analytics, advisor, websocket
+# SIH Upgrades: MPC optimizer and automated load shedding
+try:
+    from app.api import mpc, load_shedding as load_shedding_api
+    _SIH_UPGRADES_AVAILABLE = True
+except ImportError:
+    _SIH_UPGRADES_AVAILABLE = False
+    print("[WARN] SIH upgrade modules not yet available — run after build completes")
 from datetime import datetime
 
 async def background_simulation():
@@ -73,6 +80,11 @@ app.include_router(reports.router, prefix="/api/reports", tags=["reports"])
 app.include_router(analytics.router, prefix="/api/analytics", tags=["analytics"])
 app.include_router(advisor.router, prefix="/api/advisor", tags=["advisor"])
 app.include_router(websocket.router, tags=["websocket"])
+
+# SIH Upgrades — register if build complete
+if _SIH_UPGRADES_AVAILABLE:
+    app.include_router(mpc.router, prefix="/api/mpc", tags=["mpc-optimizer"])
+    app.include_router(load_shedding_api.router, prefix="/api/safety", tags=["load-shedding"])
 
 @app.get("/")
 async def root():

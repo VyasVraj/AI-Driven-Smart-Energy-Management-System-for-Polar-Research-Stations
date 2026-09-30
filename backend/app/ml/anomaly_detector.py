@@ -1,11 +1,19 @@
-from sklearn.ensemble import IsolationForest
 import pandas as pd
 import numpy as np
 
+try:
+    from sklearn.ensemble import IsolationForest
+    _SKLEARN_OK = True
+except (ImportError, Exception):
+    _SKLEARN_OK = False
+    print("[WARN] sklearn not available — AnomalyDetector disabled")
+
+
 class AnomalyDetector:
     def __init__(self):
-        self.model = IsolationForest(contamination=0.01, random_state=42)
+        self.model = IsolationForest(contamination=0.01, random_state=42) if _SKLEARN_OK else None
         self.is_fitted = False
+
         
     def train(self, df: pd.DataFrame):
         features = ['total_load_kw', 'solar_kw', 'wind_kw', 'battery_kw', 'diesel_kw', 'temperature_c']

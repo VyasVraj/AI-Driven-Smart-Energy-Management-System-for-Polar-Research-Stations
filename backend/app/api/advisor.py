@@ -12,6 +12,16 @@ from datetime import datetime
 router = APIRouter()
 _sim = PolarDataGenerator()
 
+# RAG-enhanced advisor (SIH upgrade) — falls back to template if not yet built
+try:
+    from app.rag.rag_advisor import RAGAdvisor
+    _rag = RAGAdvisor()
+    _RAG_AVAILABLE = True
+except ImportError:
+    _rag = None
+    _RAG_AVAILABLE = False
+
+
 
 def _get_station_state(station, scenario: str = "normal") -> dict:
     return _sim.generate_reading(station, datetime.utcnow(), scenario)
@@ -194,7 +204,21 @@ def advisor_query(req: AdvisorRequest, db: Session = Depends(get_db)):
     state = _get_station_state(station)
     q = req.question.lower()
 
-    # Match response template
+    # ── Try RAG-enhanced advisor first (SIH upgrade) ─────────────────────────
+    if _RAG_AVAILABLE and _rag is not None:
+        try:
+            rag_result = _rag.answer(req.question, state)
+            return AdvisorResponse(
+                answer=rag_result.get("answer", ""),
+                reasoning=rag_result.get("reasoning", ""),
+                relevant_metrics={m["label"]: m["value"] for m in rag_result.get("key_metrics", [])},
+                recommended_action=" | ".join(rag_result.get("action_items", [])),
+                confidence=rag_result.get("confidence", 0.88),
+            )
+        except Exception as e:
+            print(f"[RAG Advisor] Error, falling back to template: {e}")
+
+    # ── Fallback: Template-based response matching ────────────────────────────
     matched = None
     for key, tmpl in _RESPONSE_TEMPLATES.items():
         if any(kw in q for kw in tmpl["keywords"]):
@@ -219,6 +243,7 @@ def advisor_query(req: AdvisorRequest, db: Session = Depends(get_db)):
     )
 
 
+
 @router.get("/suggestions")
 def get_suggestions(station_id: int = Query(1)):
     """Return predefined question suggestions for the UI."""
@@ -231,4 +256,33 @@ def get_suggestions(station_id: int = Query(1)):
         "What can we do to reduce fuel consumption?",
         "What is the current battery status?",
         "How is solar generation affected by current weather?",
+        # SIH upgrade questions (RAG-enabled)
+        "What does the blizzard emergency protocol say about load shedding?",
+        "What is the wet stacking risk with the diesel generator at current load?",
+        "How does the Antarctic Treaty affect our fuel usage?",
+        "What is the battery cold weather derating at current temperature?",
+        "Explain the MPC 24-hour optimization plan for today",
     ]
+
+
+@router.get("/rag-status")
+def get_rag_status():
+    """Check if RAG knowledge base is active (SIH upgrade indicator)."""
+    if _RAG_AVAILABLE and _rag is not None:
+        try:
+            categories = _rag.kb.get_all_categories()
+            doc_count = getattr(_rag.kb, "document_count", 15)
+            return {
+                "rag_active": True,
+                "knowledge_documents": doc_count,
+                "categories": categories,
+                "advisor_mode": "RAG-Enhanced (NCPOR Knowledge Base)",
+                "description": "Answers grounded in official NCPOR SOPs, Antarctic Treaty guidelines, and live station telemetry",
+            }
+        except Exception:
+            pass
+    return {
+        "rag_active": False,
+        "advisor_mode": "Template-Based",
+        "description": "Keyword-matched template responses",
+    }
